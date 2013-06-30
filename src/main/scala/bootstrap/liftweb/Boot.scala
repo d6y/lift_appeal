@@ -10,6 +10,7 @@ import sitemap._
 import Loc._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
+import code.rest.PoemResource
 
 
 /**
@@ -20,6 +21,8 @@ class Boot {
   def boot {
     // where to search snippet
     LiftRules.addToPackages("code")
+
+    LiftRules.statelessDispatch.append(PoemResource)
 
     // Build SiteMap
     val entries = List(
@@ -51,7 +54,7 @@ class Boot {
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
-    JQueryModule.InitParam.JQuery=JQueryModule.JQuery172
+    JQueryModule.InitParam.JQuery=JQueryModule.JQuery191
     JQueryModule.init()
 
   }
