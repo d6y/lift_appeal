@@ -24,18 +24,29 @@ class Boot {
 
     LiftRules.statelessDispatch.append(PoemResource)
 
-    // Build SiteMap
-    val entries = List(
-      Menu.i("Home") / "index", // the simple way to declare a menu
+    val PremiumCustomersOnly = If(
+      () => false,
+      () => S.redirectTo("https://shop.example.org/") )
 
-      // more complex because this menu allows anything in the
-      // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")))
+    lazy val home = Menu.i("home") / "index"
 
-    // set the sitemap.  Note if you don't want access control for
-    // each page, just comment this line out.
-    LiftRules.setSiteMap(SiteMap(entries:_*))
+    lazy val poets = Menu.i("poets") / "list" submenus (
+      Menu("Larkin") / "a-z" / "larkin",
+      Menu("Tennyson") / "a-z" / "tennyson" >> PremiumCustomersOnly
+    )
+
+
+   import code.snippet.PoetFact
+   import code.snippet.PoetFacts.database
+
+    lazy val fact = Menu.param[PoetFact]("poet", "Poet Fact",
+      surname => database.get(surname),
+      fact => fact.surname.toLowerCase
+      ) / "fact" >> Hidden
+
+
+    LiftRules.setSiteMap(SiteMap(home, poets, fact))
+
 
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
