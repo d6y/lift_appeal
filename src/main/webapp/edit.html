@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+   <title>Edit</title>
+</head>
+<body data-lift-content-id="main">
+<div id="main" data-lift="surround?with=default;at=content">
+
+<h1>Collaborative Poem Editor</h1>
+
+<div data-lift="comet?type=Editor">
+  <textarea id="poem">There once was a man from Nantucket,</textarea>
+</div>
+
+<script>
+    <!--
+
+    // A placeholder for the person's name:
+    var name = Math.floor(Math.random() * 1000000).toString()
+
+     // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
+    function getCaret(el) {
+        if (el.selectionStart) {
+            return el.selectionStart;
+        } else if (document.selection) {
+            el.focus();
+
+            var r = document.selection.createRange();
+            if (r == null) {
+                return 0;
+            }
+
+            var re = el.createTextRange(),
+                    rc = re.duplicate();
+            re.moveToBookmark(r.getBookmark());
+            rc.setEndPoint('EndToStart', re);
+
+            return rc.text.length;
+        }
+        return 0;
+    }
+
+    function charAndPos(e) {
+        return function() {
+            return {
+                sender: name,
+                char: String.fromCharCode(e[0].charCode),
+                pos: getCaret(document.getElementById('poem'))
+            }
+        };
+    }
+
+    function insertAt(sender, pos, char) {
+       if (sender !== name) {
+            var text = $('#poem').val();
+            var before = text.substr(0,pos);
+            var after = text.substr(pos)
+            $('#poem').val(before + char + after);
+        }
+    }
+
+    -->
+</script>
+</div>
+</body>
+</html>

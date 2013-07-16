@@ -47,16 +47,10 @@ class Boot {
 
     lazy val thesaurus = Menu.i("thesaurus") / "thesaurus"
 
-    LiftRules.setSiteMap(SiteMap(home, poets, fact, thesaurus))
+    lazy val editor = Menu.i("editor") / "edit"
 
+    LiftRules.setSiteMap(SiteMap(home, poets, fact, thesaurus, editor))
 
-    //Show the spinny image when an Ajax call starts
-    LiftRules.ajaxStart =
-      Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
-
-    // Make the spinny image go away when it ends
-    LiftRules.ajaxEnd =
-      Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
