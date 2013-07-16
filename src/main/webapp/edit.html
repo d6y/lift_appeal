@@ -16,7 +16,7 @@
     <!--
 
     // A placeholder for the person's name:
-    var name = Math.floor(Math.random() * 1000000).toString()
+    var name = Math.floor(Math.random() * 1000000).toString();
 
      // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
     function getCaret(el) {
@@ -40,9 +40,30 @@
         return 0;
     }
 
+    // http://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
+    function setSelectionRange(input, selectionStart, selectionEnd) {
+        if (input.setSelectionRange) {
+            input.focus();
+            input.setSelectionRange(selectionStart, selectionEnd);
+        }
+        else if (input.createTextRange) {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', selectionEnd);
+            range.moveStart('character', selectionStart);
+            range.select();
+        }
+    }
+
+    function setCaretToPos (input, pos) {
+        setSelectionRange(input, pos, pos);
+    }
+
+
     function charAndPos(e) {
         return function() {
             return {
+                command: "insert",
                 sender: name,
                 char: String.fromCharCode(e[0].charCode),
                 pos: getCaret(document.getElementById('poem'))
@@ -50,13 +71,51 @@
         };
     }
 
-    function insertAt(sender, pos, char) {
-       if (sender !== name) {
-            var text = $('#poem').val();
-            var before = text.substr(0,pos);
-            var after = text.substr(pos)
-            $('#poem').val(before + char + after);
+    function detectDelete(e) {
+        return function() {
+            var kc = e[0].keyCode;
+            if (kc === 8 || kc == 46) {
+                return {
+                    command: "delete",
+                    sender: name,
+                    pos: getCaret(document.getElementById('poem'))
+                }
+            } else {
+                return {};
+            }
         }
+    }
+
+    function accept(edit) {
+        if (edit.sender !== name) {
+            // Save cursor pos:
+            var elem = document.getElementById('poem');
+            var cursor = getCaret(elem);
+
+            // Modify text:
+            if (edit.command === "insert") insertAt(edit.pos, edit.char);
+            else if (edit.command === "delete") removeAt(edit.pos);
+
+            // Restore cursor pos, allowing for edits before the cursor:
+            if (edit.pos < cursor) {
+                cursor = cursor + (edit.command == "insert" ? 1 : -1);
+            }
+            setCaretToPos(elem, cursor);
+        }
+    }
+
+    function insertAt(pos, char) {
+        var text = $('#poem').val();
+        var before = text.substr(0,pos);
+        var after = text.substr(pos);
+        $('#poem').val(before + char + after);
+    }
+
+    function removeAt(pos) {
+        var text = $('#poem').val();
+        var before = text.substr(0,pos);
+        var after = text.substr(pos+1)
+        $('#poem').val(before + after);
     }
 
     -->
