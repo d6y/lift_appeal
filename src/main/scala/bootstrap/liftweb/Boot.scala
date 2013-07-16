@@ -11,6 +11,7 @@ import Loc._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
 import code.rest.PoemResource
+import code.lib.Thesaurus
 
 
 /**
@@ -33,25 +34,26 @@ class Boot {
     lazy val poets = Menu.i("poets") / "list" submenus (
       Menu("Larkin") / "a-z" / "larkin",
       Menu("Tennyson") / "a-z" / "tennyson" >> PremiumCustomersOnly
-    )
+      )
 
-
-   import code.snippet.PoetFact
-   import code.snippet.PoetFacts.database
+    import code.snippet.PoetFact
+    import code.snippet.PoetFacts.database
 
     lazy val fact = Menu.param[PoetFact]("poet", "Poet Fact",
       surname => database.get(surname),
       fact => fact.surname.toLowerCase
-      ) / "fact" >> Hidden
+    ) / "fact" >> Hidden
 
 
-    LiftRules.setSiteMap(SiteMap(home, poets, fact))
+    lazy val thesaurus = Menu.i("thesaurus") / "thesaurus"
+
+    LiftRules.setSiteMap(SiteMap(home, poets, fact, thesaurus))
 
 
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
-    
+
     // Make the spinny image go away when it ends
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
@@ -67,6 +69,9 @@ class Boot {
     LiftRules.jsArtifacts = JQueryArtifacts
     JQueryModule.InitParam.JQuery=JQueryModule.JQuery191
     JQueryModule.init()
+
+    // Preload our in-memory database
+    Schedule( () => Thesaurus.database )
 
   }
 }

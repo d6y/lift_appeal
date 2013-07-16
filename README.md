@@ -13,3 +13,7 @@ If this is the first time you've run this, it will download required libraries. 
 ...and visit http://127.0.0.1:8080/
 
 
+## Credits
+
+This repository contains the [Moby Thesaurus](https://en.wikipedia.org/wiki/Moby_Thesaurus#Thesaurus).
+
