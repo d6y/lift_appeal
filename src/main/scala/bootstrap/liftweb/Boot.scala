@@ -32,9 +32,9 @@ class Boot {
     lazy val home = Menu.i("home") / "index"
 
     lazy val poets = Menu.i("poets") / "list" submenus (
-      Menu("Larkin") / "a-z" / "larkin",
+      Menu("Larkin")   / "a-z" / "larkin",
       Menu("Tennyson") / "a-z" / "tennyson" >> PremiumCustomersOnly
-      )
+    )
 
     import code.snippet.PoetFact
     import code.snippet.PoetFacts.database
@@ -55,9 +55,6 @@ class Boot {
     // Force the request to be UTF-8
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
 
-    // Use HTML5 for rendering
-    LiftRules.htmlProperties.default.set((r: Req) =>
-      new Html5Properties(r.userAgent))
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
@@ -65,7 +62,6 @@ class Boot {
     JQueryModule.init()
 
     // Preload our in-memory database
-    Schedule( () => Thesaurus.database )
-
+    Schedule( () => { val ignore = Thesaurus.database } )
   }
 }

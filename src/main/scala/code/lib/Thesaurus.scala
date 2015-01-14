@@ -15,7 +15,7 @@ object Thesaurus {
    *
    * NB: the thesaurus contains alternate entries for some stems, so this is a lossy representation.
    */
-  val database : Map[String,Set[String]] =
+  val database: Map[String,Set[String]] =
     Thesaurus.words.map(e => e.stem.toLowerCase -> e.synonyms).toMap
 
   /**
@@ -24,7 +24,7 @@ object Thesaurus {
    * @param word  the word to look up.
    * @return      an associated word, or the original if no alternatives found.
    */
-  def association(word: String) : String =
+  def association(word: String): String =
     (database get word.toLowerCase).map(pickOne) getOrElse word
 
   private def pickOne(words: Set[String]) = Random.shuffle(words.toSeq).head
@@ -32,15 +32,15 @@ object Thesaurus {
   /**
    * Read the entries in the Moby thesaurus.
    */
-  def words : Stream[Entry] = {
+  def words: Stream[Entry] = {
 
     /* The thesaurus file contains ^M separated entries. Each entry starts with the stem word.
     followed by a space, and then comma-separated list of synonyms. */
     val dataPath = "/mobythes.aur"
 
-    def asScanner(in: InputStream) : Scanner = new Scanner(in, "ASCII").useDelimiter("\r")
+    def asScanner(in: InputStream): Scanner = new Scanner(in, "ASCII").useDelimiter("\r")
 
-    def parse(in: Scanner) : Stream[Entry] =
+    def parse(in: Scanner): Stream[Entry] =
       in.hasNext match {
         case false =>
           in.close()
@@ -56,8 +56,4 @@ object Thesaurus {
       map(parse) openOr Stream.empty
 
   }
-
-
-
-
 }

@@ -6,7 +6,6 @@ import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JE._
 import net.liftweb.json.JsonAST.JValue
 
-
 class Editor extends CometActor with CometListener {
 
   // The server code we send messages to, and receive messages from:
@@ -15,10 +14,10 @@ class Editor extends CometActor with CometListener {
   // When shown, bind key presses to server events:
   def render =
     "#poem [onkeypress]" #> SHtml.jsonCall(Call("charAndPos(arguments)"), updateServer _) &
-    "#poem [onkeyup]" #> SHtml.jsonCall(Call("detectDelete(arguments)"), updateServer _)
+    "#poem [onkeyup]"    #> SHtml.jsonCall(Call("detectDelete(arguments)"), updateServer _)
 
   // When we get a key event, notify the server:
-  def updateServer(json: JValue) : JsCmd = {
+  def updateServer(json: JValue): JsCmd = {
     EditServer ! json
     Noop
   }
@@ -27,12 +26,11 @@ class Editor extends CometActor with CometListener {
   override def lowPriority = {
 
     // Process an edit: send the change via a JavaScript Call:
-    case edit : JValue => partialUpdate(Call("accept", edit))
+    case edit: JValue => partialUpdate(Call("accept", edit))
 
     // If we've joined late, apply all the changes so far:
     case edits: Vector[JValue] =>
       val js = edits.foldLeft(Noop) { (z,edit) => z & Call("accept",edit) }
       partialUpdate(js)
   }
-
 }

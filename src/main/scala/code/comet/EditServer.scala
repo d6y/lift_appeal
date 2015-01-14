@@ -15,10 +15,9 @@ object EditServer extends LiftActor with ListenerManager {
     // When we receive an edit, save it in the history and pass it on to all browsers:
     case change : JValue =>
       history = history :+ change
-      updateListeners(change)
+      sendListenersMessage(change)
   }
 
   // When a collaborator joins, send them this:
   def createUpdate = history
-
 }

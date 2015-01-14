@@ -10,7 +10,7 @@ object PoemResource extends RestHelper {
     "Larkin" -> List("This Be The Verse", "Aubade")
   )
 
-  def asJSON(titles: List[String]) : JValue =
+  def asJSON(titles: List[String]): JValue =
     ("titles" -> titles)
 
   serve {
@@ -25,5 +25,4 @@ object PoemResource extends RestHelper {
     case "poems" :: "by" :: author :: Nil Get request =>
       for ( titles <- poems.get(author) )
         yield ("titles" -> titles) ~ ("author" -> author)
-
  */
